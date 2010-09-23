@@ -51,11 +51,13 @@ class NoticeType(models.Model):
 # if this gets updated, the create() method below needs to be as well...
 NOTICE_MEDIA = (
     ("1", _("Email")),
+    ("2", _("Display")),
 )
 
 # how spam-sensitive is the medium
 NOTICE_MEDIA_DEFAULTS = {
-    "1": 2 # email
+    "1": 2, # email
+    "2": 3
 }
 
 class NoticeSetting(models.Model):
@@ -315,7 +317,7 @@ def send_now(users, label, extra_context=None, on_site=True, sender=None):
         body = render_to_string('notification/email_body.txt', {
             'message': messages['full.txt'],
         }, context)
-
+        on_site = should_send(user, notice_type, "2") #On-site display
         notice = Notice.objects.create(recipient=user, message=messages['notice.html'],
             notice_type=notice_type, on_site=on_site, sender=sender)
         if should_send(user, notice_type, "1") and user.email and user.is_active: # Email
