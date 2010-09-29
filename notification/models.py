@@ -26,6 +26,8 @@ from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext, get_language, activate
 
+from postmark import PMMail
+
 
 QUEUE_ALL = getattr(settings, "NOTIFICATION_QUEUE_ALL", False)
 
@@ -324,9 +326,7 @@ def send_now(users, label, extra_context=None, on_site=True, sender=None):
             notice_type=notice_type, on_site=on_site, sender=sender)
         if should_send(user, notice_type, "1") and user.email and user.is_active: # Email
             recipients.append(user.email)
-        msg = EmailMessage(subject, body, settings.DEFAULT_FROM_EMAIL, recipients)
-	msg.content_subtype = "html"
-	msg.send()
+	msg = PMMail(to=recipients, subject=subject, html_body=body)
 
     # reset environment to original language
     activate(current_language)
