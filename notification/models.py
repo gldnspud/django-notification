@@ -1,4 +1,5 @@
 import datetime
+import pynliner
 
 try:
     import cPickle as pickle
@@ -317,6 +318,7 @@ def send_now(users, label, extra_context=None, on_site=True, sender=None):
         body = render_to_string('notification/email_body.txt', {
             'message': messages['full.txt'],
         }, context)
+	body = pynliner.fromString(body)
         on_site = should_send(user, notice_type, "2") #On-site display
         notice = Notice.objects.create(recipient=user, message=messages['notice.html'],
             notice_type=notice_type, on_site=on_site, sender=sender)
