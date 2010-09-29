@@ -327,6 +327,7 @@ def send_now(users, label, extra_context=None, on_site=True, sender=None):
         if should_send(user, notice_type, "1") and user.email and user.is_active: # Email
             recipients.append(user.email)
 	msg = PMMail(to=recipients, subject=subject, html_body=body)
+	msg.send()
 
     # reset environment to original language
     activate(current_language)
