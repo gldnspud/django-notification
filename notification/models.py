@@ -326,6 +326,7 @@ def send_now(users, label, extra_context=None, on_site=True, sender=None):
             notice_type=notice_type, on_site=on_site, sender=sender)
         if should_send(user, notice_type, "1") and user.email and user.is_active: # Email
             recipients.append(user.email)
+	recipients = ','.join(recipients)
 	msg = PMMail(to=recipients, subject=subject, html_body=body)
 	msg.send()
 
